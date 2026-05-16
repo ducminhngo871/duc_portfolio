@@ -1,26 +1,200 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: #F5F7FA;
+  --color-bg-card: #FFFFFF;
+  --color-text: #05070D;
+  --color-muted: #5A2E12;
+  --color-accent: #0A7BFF;
+  --color-accent-dark: #0646B8;
+  --color-secondary: #0646B8;
+  --color-soft: #F5F7FA;
+  --color-border: #D8DFEA;
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-playfair);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #F5F7FA;
+  --foreground: #05070D;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F5F7FA;
+  color: #05070D;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero-on-dark {
+  color: #FFFFFF;
+}
+
+.hero-on-dark h1,
+.hero-on-dark h2,
+.hero-on-dark h3,
+.hero-on-dark a:not(.hero-cta-light) {
+  color: #FFFFFF !important;
+}
+
+.hero-on-dark .hero-muted {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+/* Card hover lift */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(6, 27, 95, 0.12);
+}
+
+/* Image zoom inside a card */
+.img-zoom {
+  overflow: hidden;
+}
+.img-zoom img {
+  transition: transform 0.5s ease;
+}
+.img-zoom:hover img {
+  transform: scale(1.06);
+}
+
+/* Sliding underline for links */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background-color: #0A7BFF;
+  transition: width 0.25s ease;
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Button press */
+.btn-press {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-press:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(10, 123, 255, 0.3);
+}
+.btn-press:active {
+  transform: translateY(0px);
+  box-shadow: none;
+}
+
+/* Local writing archive typography */
+.writing-article {
+  color: #05070D;
+  font-size: 1.075rem;
+  line-height: 1.85;
+}
+
+.writing-article p,
+.writing-article ul,
+.writing-article ol,
+.writing-article blockquote,
+.writing-article figure {
+  margin: 1.35rem 0;
+}
+
+.writing-article h2,
+.writing-article h3 {
+  margin: 2.75rem 0 1rem;
+  color: #05070D;
+  line-height: 1.2;
+}
+
+.writing-article h2 {
+  font-size: 1.85rem;
+}
+
+.writing-article h3 {
+  font-size: 1.45rem;
+}
+
+.writing-article a {
+  color: #0A7BFF;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.writing-article blockquote {
+  border-left: 3px solid #0A7BFF;
+  padding-left: 1.25rem;
+  color: #05070D;
+  font-size: 1.2rem;
+}
+
+.writing-article img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1.5rem auto 0;
+}
+
+.writing-article figure {
+  overflow: hidden;
+}
+
+.writing-article figcaption {
+  margin-top: 0.65rem;
+  color: #5A2E12;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.writing-article hr {
+  margin: 2.25rem 0;
+  border: 0;
+  border-top: 1px solid #D8DFEA;
+}
+
+/* Fade-in up on load */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
