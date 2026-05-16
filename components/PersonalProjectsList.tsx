@@ -19,7 +19,7 @@ const projects: Project[] = [
   {
     id: "substack",
     title: "Still Here, Duc (Substack)",
-    period: "2022 – Present",
+    period: "Feb 2026 – Present",
     description:
       "I write about analytics, learning, career, and things I'm figuring out as I go. A place for longer reflections that don't fit in a dashboard or a slide deck.",
     tags: ["Writing"],
@@ -30,7 +30,7 @@ const projects: Project[] = [
   {
     id: "youtube",
     title: "Piano Recordings (YouTube)",
-    period: "2020 – Present",
+    period: "2023 – Present",
     description:
       "I play piano and sometimes record pieces I'm working through. A completely different kind of practice from data work.",
     tags: ["Music"],
@@ -41,7 +41,7 @@ const projects: Project[] = [
   {
     id: "stock-picking-ml",
     title: "Stock Picking with Machine Learning",
-    period: "2021 – 2022",
+    period: "March 2022 – May 2022",
     description:
       "Built a financial dataset for S&P 500 companies from 1999 to 2021 by scraping Yahoo Finance. Evaluated Lasso, Random Forest, and Stacking models based on backtested returns. The top 20 picks returned 47.35% in 2021, beating the S&P 500 by 21%.",
     tags: ["Python", "Finance", "Machine Learning"],
@@ -52,7 +52,7 @@ const projects: Project[] = [
   {
     id: "soccer-spatial",
     title: "Mapping Spatial Patterns in Soccer",
-    period: "2021 – 2022",
+    period: "March 2022 – May 2022",
     description:
       "Used the Wyscout dataset covering five major European leagues in 2018. Applied linear mixed-effects models and created 100+ animated graphs with ggsoccer and gganimate to reveal stylistic differences between teams and leagues.",
     tags: ["R", "Sports Analytics"],

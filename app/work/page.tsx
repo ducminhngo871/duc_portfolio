@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import TorilabShowcase from "@/components/TorilabShowcase";
 import PersonalProjectsList from "@/components/PersonalProjectsList";
 
@@ -405,6 +406,28 @@ export default function PortfolioPage() {
           Writing, music, and academic projects built outside of work.
         </p>
         <PersonalProjectsList />
+
+        {/* ── CTA: see all projects ──────────────────────────── */}
+        <Link
+          href="/projects"
+          className="group mt-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-2xl bg-gradient-to-r from-[#0A7BFF] to-[#063A99] p-8 shadow-md transition-transform hover:-translate-y-0.5 hover:shadow-xl"
+        >
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-white/70 mb-2">
+              Want to see more?
+            </p>
+            <p className="font-[family-name:var(--font-playfair)] text-xl md:text-2xl font-bold text-white">
+              Still curious? Check out all of my projects!
+            </p>
+            <p className="text-sm text-white/80 mt-1.5">
+              Machine learning, finance, sports analytics, geospatial work, and more.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-2 self-start sm:self-auto shrink-0 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#063A99] transition-transform group-hover:translate-x-1">
+            Check out all my projects
+            <span aria-hidden>→</span>
+          </span>
+        </Link>
       </section>
     </div>
   );
