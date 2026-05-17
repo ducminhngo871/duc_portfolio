@@ -8,10 +8,18 @@ const sanitizeHtml = require("sanitize-html");
 const FEED_URL = "https://stillhereduc.substack.com/feed";
 const OUTFILE = path.join(process.cwd(), "data", "substack-posts.json");
 
+const REQUEST_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  Accept: "application/rss+xml, application/xml, text/xml, */*",
+  "Accept-Language": "en-US,en;q=0.9",
+};
+
 function fetchText(url) {
   return new Promise((resolve, reject) => {
     https
-      .get(url, (response) => {
+      .get(url, { headers: REQUEST_HEADERS }, (response) => {
         if (
           response.statusCode &&
           response.statusCode >= 300 &&
