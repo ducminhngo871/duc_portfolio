@@ -16,7 +16,17 @@ const REQUEST_HEADERS = {
   "Accept-Language": "en-US,en;q=0.9",
 };
 
-function fetchText(url) {
+// Public raw passthrough proxies. Substack sits behind Cloudflare, which
+// 403s datacenter IP ranges (e.g. GitHub Actions runners) regardless of
+// headers. When a direct fetch fails we retry through these, which return
+// the original RSS bytes unchanged so downstream parsing is unaffected.
+const FETCH_PROXIES = [
+  (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  (u) => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
+  (u) => `https://thingproxy.freeboard.io/fetch/${u}`,
+];
+
+function httpGet(url) {
   return new Promise((resolve, reject) => {
     https
       .get(url, { headers: REQUEST_HEADERS }, (response) => {
@@ -26,12 +36,12 @@ function fetchText(url) {
           response.statusCode < 400 &&
           response.headers.location
         ) {
-          fetchText(response.headers.location).then(resolve, reject);
+          httpGet(response.headers.location).then(resolve, reject);
           return;
         }
 
         if (response.statusCode !== 200) {
-          reject(new Error(`Feed request failed with ${response.statusCode}`));
+          reject(new Error(`Request failed with ${response.statusCode}`));
           return;
         }
 
@@ -44,6 +54,27 @@ function fetchText(url) {
       })
       .on("error", reject);
   });
+}
+
+async function fetchText(url) {
+  try {
+    return await httpGet(url);
+  } catch (directError) {
+    for (const makeProxyUrl of FETCH_PROXIES) {
+      try {
+        const body = await httpGet(makeProxyUrl(url));
+        if (body && body.trim()) {
+          console.log(`Fetched via proxy: ${makeProxyUrl(url).split("?")[0]}`);
+          return body;
+        }
+      } catch {
+        // try the next proxy
+      }
+    }
+    throw new Error(
+      `Feed request failed (direct: ${directError.message}; all proxies failed)`,
+    );
+  }
 }
 
 function decodeHtml(value = "") {
