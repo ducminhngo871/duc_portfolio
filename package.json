@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync:substack": "node scripts/sync-substack.js"
+    "sync:substack": "node scripts/sync-substack.js",
+    "publish": "npm run sync:substack && git add data/substack-posts.json && if git diff --cached --quiet; then echo 'No new posts — nothing to publish.'; else git commit -m 'Sync latest Substack posts' && git push origin main && echo 'Pushed. Site will update in ~1-2 min.'; fi"
   },
   "dependencies": {
     "next": "16.2.6",
