@@ -159,9 +159,38 @@ async function main() {
     })
     .filter((post) => post.title && post.slug && post.contentHtml);
 
+  // Merge with previously-synced posts so articles that have scrolled out of
+  // the (capped ~20-item) RSS feed are never lost. Fresh feed data wins for
+  // posts still present; older posts are preserved as last captured.
+  let existing = [];
+  if (fs.existsSync(OUTFILE)) {
+    try {
+      existing = JSON.parse(fs.readFileSync(OUTFILE, "utf8"));
+    } catch {
+      existing = [];
+    }
+  }
+
+  const bySlug = new Map();
+  for (const post of existing) {
+    if (post && post.slug) bySlug.set(post.slug, post);
+  }
+  let added = 0;
+  for (const post of posts) {
+    if (!bySlug.has(post.slug)) added += 1;
+    bySlug.set(post.slug, post);
+  }
+
+  const merged = Array.from(bySlug.values()).sort(
+    (a, b) => new Date(b.date) - new Date(a.date),
+  );
+
   fs.mkdirSync(path.dirname(OUTFILE), { recursive: true });
-  fs.writeFileSync(OUTFILE, `${JSON.stringify(posts, null, 2)}\n`);
-  console.log(`Wrote ${posts.length} posts to ${OUTFILE}`);
+  fs.writeFileSync(OUTFILE, `${JSON.stringify(merged, null, 2)}\n`);
+  console.log(
+    `Wrote ${merged.length} posts to ${OUTFILE} ` +
+      `(${added} new, ${merged.length - added} retained)`,
+  );
 }
 
 if (require.main === module) {
