@@ -67,7 +67,7 @@ const skills = {
   Certifications: "Google Professional Data Analytics, Machine Learning with Python, Analyze Data with SQL",
 };
 
-const RESUME_DRIVE_FILE_ID = "14C_N57dCt2BzTMtpAHH_LqFF2dds5-J1";
+const RESUME_DRIVE_FILE_ID = "1dWvZtEEq3JHbZKd-qx45kmB24rlWsqUw";
 const RESUME_DRIVE_FOLDER =
   "https://drive.google.com/drive/folders/19AXPcVM8b1pyYCRckwlrnlWafOgEk21E?usp=drive_link";
 const RESUME_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${RESUME_DRIVE_FILE_ID}`;
