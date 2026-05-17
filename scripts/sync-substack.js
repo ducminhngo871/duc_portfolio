@@ -3,6 +3,7 @@
 const fs = require("node:fs");
 const https = require("node:https");
 const path = require("node:path");
+const sanitizeHtml = require("sanitize-html");
 
 const FEED_URL = "https://stillhereduc.substack.com/feed";
 const OUTFILE = path.join(process.cwd(), "data", "substack-posts.json");
@@ -97,6 +98,43 @@ function simplifyContentHtml(html) {
     .trim();
 }
 
+function sanitizeContentHtml(html) {
+  return sanitizeHtml(html, {
+    allowedTags: [
+      "p", "br", "hr", "div", "span", "blockquote", "pre", "code",
+      "h1", "h2", "h3", "h4", "h5", "h6",
+      "ul", "ol", "li", "strong", "em", "b", "i", "u", "s",
+      "a", "img", "figure", "figcaption", "iframe",
+      "table", "thead", "tbody", "tr", "th", "td",
+    ],
+    allowedAttributes: {
+      a: ["href", "name", "title"],
+      img: ["src", "alt", "title", "width", "height"],
+      iframe: ["src", "width", "height", "allow", "allowfullscreen", "title"],
+    },
+    allowedSchemes: ["http", "https", "mailto"],
+    allowProtocolRelativeUrls: false,
+    allowedIframeHostnames: [
+      "www.youtube-nocookie.com",
+      "youtube-nocookie.com",
+      "www.youtube.com",
+      "youtube.com",
+      "player.vimeo.com",
+      "stillhereduc.substack.com",
+    ],
+    transformTags: {
+      a: (tagName, attribs) => ({
+        tagName,
+        attribs: {
+          ...attribs,
+          target: "_blank",
+          rel: "noopener noreferrer",
+        },
+      }),
+    },
+  });
+}
+
 async function main() {
   const xml = await fetchText(FEED_URL);
   const posts = Array.from(xml.matchAll(/<item>([\s\S]*?)<\/item>/g))
@@ -114,7 +152,9 @@ async function main() {
         image: (item.match(/<enclosure[^>]*url="([^"]+)"/) || [])[1] || "",
         category: inferCategory(title),
         author: stripHtml(getTagValue(item, "dc:creator")) || "Still Here, Duc",
-        contentHtml: simplifyContentHtml(getTagValue(item, "content:encoded")),
+        contentHtml: sanitizeContentHtml(
+          simplifyContentHtml(getTagValue(item, "content:encoded")),
+        ),
       };
     })
     .filter((post) => post.title && post.slug && post.contentHtml);
@@ -124,7 +164,11 @@ async function main() {
   console.log(`Wrote ${posts.length} posts to ${OUTFILE}`);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
+
+module.exports = { sanitizeContentHtml };
